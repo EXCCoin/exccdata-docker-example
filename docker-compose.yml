@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: exccdata
+      POSTGRES_PASSWORD: exccdata
+      POSTGRES_DB: exccdata
+    expose:
+      - 5432
+
+  exccd:
+    image: exccco/exccd:2.2.0-alpine3.9
+    volumes:
+      - ./conf/exccd.conf:/app/exccd.conf
+      - ./conf/exccd.cert:/app/rpc.cert
+      - ./conf/exccd.key:/app/rpc.key
+      - exccd-data:/data
+
+  exccdata:
+    image: exccco/exccdata:4.0.0-alpine3.9
+    ports:
+      - 7777:7777
+    volumes:
+      - ./conf/exccdata.conf:/app/exccdata.conf
+      - ./conf/exccd.cert:/app/exccd.cert
+      - exccdata-data:/data
+    depends_on:
+      - exccd
+      - postgres
+
+volumes:
+  exccd-data:
+  exccdata-data:

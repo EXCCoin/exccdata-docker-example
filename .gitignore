@@ -1,0 +1,5 @@
+.idea
+.vagrant
+Vagrantfile
+conf/exccd.cert
+conf/exccd.key
